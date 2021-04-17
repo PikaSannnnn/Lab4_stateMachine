@@ -14,19 +14,15 @@
 
 int main(void) {
   	DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFE; PORTB = 0x00; // ooo oooi 
+	DDRB = 0xFF; PORTB = 0x00;
     unsigned char tmpA = 0x00;
 	unsigned char tmpB = 0x00;
 
-    enum LED {INIT, OFF, OFF_WAIT, ON, ON_WAIT} LED_STATE;
-    LED_STATE = OFF_WAIT;
+    enum LED {OFF, OFF_WAIT, ON, ON_WAIT} LED_STATE;
 	while(1) {
-        tmpA = PINA & 0x03;
+        tmpA = PINA & 0x01;
         
         switch (LED_STATE) {
-            case INIT:
-                tmpB = 0x01;
-                break;
             case OFF:
                 if (!(tmpA)) {
                     LED_STATE = OFF_WAIT;
@@ -34,7 +30,6 @@ int main(void) {
                 break;
             case OFF_WAIT:
                 if (tmpA) {
-                    tmpB = 0x02;
                     LED_STATE = ON;
                 }
                 break;
@@ -45,7 +40,6 @@ int main(void) {
                 break;
             case ON_WAIT:
                 if (tmpA) {
-                    tmpB = 0x01;
                     LED_STATE = OFF;
                 }
                 break;
@@ -68,7 +62,7 @@ int main(void) {
                 tmpB = 0x02;
                 break;
             default:
-                LED_STATE = OFF_WAIT;
+                LED_STATE = 0x01;
                 break;
         }
 

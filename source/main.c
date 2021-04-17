@@ -1,42 +1,3 @@
-// /*	Author: sdong027
-//  *  Partner(s) Name: 
-//  *	Lab Section:
-//  *	Assignment: Lab #4 Exercise #1
-//  *	Exercise Description: [optional - include for your own benefit]
-//  *
-//  *	I acknowledge all content contained herein, excluding template or example
-//  *	code, is my own original work.
-//  */
-// #include <avr/io.h>
-// #ifdef _SIMULATE_
-// #include "simAVRHeader.h"
-// #endif
-
-// int main(void) {
-//   	DDRA = 0x00; PORTA = 0xFF;
-// 	DDRC = 0xFE; PORTC = 0x00; // ooo oooi 
-//     unsigned char tmpA = 0x00;
-// 	unsigned char tmpC = 0x00;
-
-//     enum OUT {INIT, INC, DEC} OUT_STATE;
-//     OUT_STATE = INIT;
-// 	while(1) {
-//         tmpA = PINA & 0x03;
-        
-//         switch (OUT_STATE) {
-//             case INIT:
-//                 tmpC = 0x07;
-//                 break;
-//             default:
-//                 LED_STATE = OFF_WAIT;
-//                 break;
-//         }
-
-//         PORTB = tmpB;
-// 	}
-// 	return 0;
-// }
-
 /*	Author: sdong027
  *  Partner(s) Name: 
  *	Lab Section:
@@ -53,65 +14,76 @@
 
 int main(void) {
   	DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFE; PORTB = 0x00; // ooo oooi 
+	DDRC = 0xFF; PORTC = 0x00;
     unsigned char tmpA = 0x00;
-	unsigned char tmpB = 0x00;
+	unsigned char tmpC = 0x00;
 
-    enum LED {INIT, OFF, OFF_WAIT, ON, ON_WAIT} LED_STATE;
-    LED_STATE = OFF_WAIT;
+    enum OUT {RST, WAIT, WAIT_RELEASE, INC, DEC} OUT_STATE;
 	while(1) {
         tmpA = PINA & 0x03;
         
-        switch (LED_STATE) {
-            case INIT:
-                tmpB = 0x01;
-                break;
-            case OFF:
-                if (!(tmpA)) {
-                    LED_STATE = OFF_WAIT;
+        switch (OUT_STATE) {
+            case RST:
+                if (!tmpA) {
+                    OUT_STATE = WAIT;
                 }
                 break;
-            case OFF_WAIT:
-                if (tmpA) {
-                    tmpB = 0x02;
-                    LED_STATE = ON;
+            case WAIT:
+                if ((tmpA & 0x01) && !(tmpA & 0x02)) {
+                    OUT_STATE = INC;
+                }
+                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
+                    OUT_STATE = DEC;
+                }
+                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
+                    OUT_STATE = RST;
                 }
                 break;
-            case ON:
-                if (!(tmpA)) {
-                    LED_STATE = ON_WAIT;
+            case WAIT_RELEASE:
+                if (!tmpA) {
+                    OUT_STATE = WAIT;
+                }
+                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
+                    OUT_STATE = RST;
                 }
                 break;
-            case ON_WAIT:
-                if (tmpA) {
-                    tmpB = 0x01;
-                    LED_STATE = OFF;
-                }
+            case INC:
+                OUT_STATE = WAIT_RELEASE;
+                break;
+            case DEC:
+                OUT_STATE = WAIT_RELEASE;
                 break;
             default:
-                LED_STATE = OFF_WAIT;
+                tmpC = 0x07;
+                OUT_STATE = WAIT_RELEASE;
                 break;
         }
 
-        switch (LED_STATE) {
-            case OFF:
-                tmpB = 0x01;
+        switch (OUT_STATE) {
+            case RST:
+                tmpC = 0x00;
                 break;
-            case OFF_WAIT:
-                tmpB = 0x01;
+            case WAIT_RELEASE:
+                if (!tmpA) {
+                    OUT_STATE = WAIT;
+                }
+                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
+                    OUT_STATE = RST;
+                }
                 break;
-            case ON:
-                tmpB = 0x02;
+            case INC:
+                if (tmpC < 9) {
+                    tmpC++;
+                }
                 break;
-            case ON_WAIT:
-                tmpB = 0x02;
-                break;
-            default:
-                LED_STATE = OFF_WAIT;
+            case DEC:
+                if (tmpC > 0) {
+                    tmpC--;
+                }
                 break;
         }
 
-        PORTB = tmpB;
+        PORTC = tmpC;
 	}
 	return 0;
 }
