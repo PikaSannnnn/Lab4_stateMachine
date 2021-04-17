@@ -19,10 +19,9 @@ int main(void) {
 	unsigned char tmpB = 0x00;
 
     enum LED {OFF, OFF_WAIT, ON, ON_WAIT} LED_STATE;
-
+    LED_STATE = OFF_WAIT;
 	while(1) {
         tmpA = PINA & 0x03;
-        LED_STATE = OFF_WAIT;
         
         switch (LED_STATE) {
             case OFF:
