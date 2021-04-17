@@ -18,37 +18,54 @@ int main(void) {
     unsigned char tmpA = 0x00;
 	unsigned char tmpB = 0x00;
 
-    enum LED {OFF, OFF_WAIT, ON, ON_WAIT} LED_STATE;
+    enum LED {INIT, OFF, OFF_WAIT, ON, ON_WAIT} LED_STATE;
     LED_STATE = OFF_WAIT;
 	while(1) {
         tmpA = PINA & 0x03;
         
         switch (LED_STATE) {
-            case OFF:
+            case INIT:
                 tmpB = 0x01;
+                break;
+            case OFF:
                 if (!(tmpA)) {
                     LED_STATE = OFF_WAIT;
                 }
                 break;
             case OFF_WAIT:
-                tmpB = 0x01;
                 if (tmpA) {
                     tmpB = 0x02;
                     LED_STATE = ON;
                 }
                 break;
             case ON:
-                tmpB = 0x02;
                 if (!(tmpA)) {
                     LED_STATE = ON_WAIT;
                 }
                 break;
             case ON_WAIT:
-                tmpB = 0x02;
                 if (tmpA) {
                     tmpB = 0x01;
                     LED_STATE = OFF;
                 }
+                break;
+            default:
+                LED_STATE = OFF_WAIT;
+                break;
+        }
+
+        switch (LED_STATE) {
+            case OFF:
+                tmpB = 0x01;
+                break;
+            case OFF_WAIT:
+                tmpB = 0x01;
+                break;
+            case ON:
+                tmpB = 0x02;
+                break;
+            case ON_WAIT:
+                tmpB = 0x02;
                 break;
             default:
                 LED_STATE = OFF_WAIT;
