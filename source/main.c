@@ -63,6 +63,8 @@ int main(void) {
             case RST:
                 tmpC = 0x00;
                 break;
+            case WAIT:
+                break;
             case WAIT_RELEASE:
                 if (!tmpA) {
                     OUT_STATE = WAIT;
