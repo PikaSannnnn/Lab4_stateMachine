@@ -42,7 +42,7 @@ int main(void) {
                     LOCK_STATE = PRESS;
                 }
                 else {
-                    i = 0x00;
+                   i = 0x00; 
                 }
                 break;
             case PRESS:
@@ -57,6 +57,7 @@ int main(void) {
                     LOCK_STATE = PRESS;
                 }
                 else {
+                    i = 0x00;
                     LOCK_STATE = LOCKED;
                 }
                 break;
@@ -84,6 +85,7 @@ int main(void) {
                     LOCK_STATE = LPRESS;
                 }
                 else {
+                    i = 0x00;
                     LOCK_STATE = UNLOCKED;
                 }
                 break;
