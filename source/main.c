@@ -43,7 +43,6 @@ int main(void) {
                     if (i == 4) {
                         LOCK_STATE = UNLOCKED;
                         i = 0x00;
-			tmpB = 0x01;
                     }
                 }
                 else {
@@ -72,8 +71,7 @@ int main(void) {
                     if (i == 4) {
                         LOCK_STATE = LOCKED;
                         i = 0x00;
-                 	tmpB = 0x00;
-		    }
+		            }
                 }
                 else {
                     i = 0x00;
@@ -102,7 +100,6 @@ int main(void) {
                 tmpC = LOCKED;
                 break;
             case PRESS:
-                tmpB = 0x00;
                 tmpC = PRESS;
                 break;
             case UNLOCKED:
@@ -110,7 +107,6 @@ int main(void) {
                 tmpC = UNLOCKED;
                 break;
             case LPRESS:
-                tmpB = 0x01;
                 tmpC = LPRESS;
                 break;
         }
