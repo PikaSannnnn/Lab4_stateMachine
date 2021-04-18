@@ -65,7 +65,7 @@ tests = [ {'description': 'PINA: 0x00 => PORTC: 7, state: WAIT',
     {'inputs': [('PINA', 0x01)], 'iterations': 2},
     {'inputs': [('PINA', 0x00)], 'iterations': 2},
     {'inputs': [('PINA', 0x02)], 'iterations': 2}],
-    'expected': [('PORTC', 0)],
+    'expected': [('PORTC', 1)],
     },
     ]
 

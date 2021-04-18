@@ -18,7 +18,7 @@ int main(void) {
     unsigned char tmpA = 0x00;
 	unsigned char tmpC = 0x00;
 
-    enum OUT {RST, WAIT, WAIT_RELEASE, INC, DEC} OUT_STATE;
+    enum OUT {RST, WAIT, WAIT_RELEASE_INC, WAIT_RELEASE_DEC, INC, DEC} OUT_STATE;
 	while(1) {
         tmpA = PINA & 0x03;
         
@@ -45,9 +45,23 @@ int main(void) {
                     OUT_STATE = RST;
                 }
                 break;
-            case WAIT_RELEASE:
+            case WAIT_RELEASE_INC:
                 if (!tmpA) {
                     OUT_STATE = WAIT;
+                }
+                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
+                    OUT_STATE = DEC;
+                }
+                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
+                    OUT_STATE = RST;
+                }
+                break;
+            case WAIT_RELEASE_DEC:
+                if (!tmpA) {
+                    OUT_STATE = WAIT;
+                }
+                else if ((tmpA & 0x01) && !(tmpA & 0x02)) {
+                    OUT_STATE = INC;
                 }
                 else if ((tmpA & 0x01) && (tmpA & 0x02)) {
                     OUT_STATE = RST;
