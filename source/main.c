@@ -63,6 +63,9 @@ int main(void) {
                 if (I) {
                     LOCK_STATE = LOCKED;
                 }
+                else if ((!X && H) && !Y) {
+                    LOCK_STATE = HLPRESS;
+                }
                 break;
             case HLPRESS:
                 if ((!X && !H) && !Y) {
