@@ -26,9 +26,9 @@ int main(void) {
 
     enum LOCK {LOCKED, HPRESS, HRELEASE, UNLOCKED} LOCK_STATE;
 	while(1) {
-        X = PINA & 0x01;
-        Y = PINA & 0x02;
-        H = PINA & 0x04;
+        X = PINA & 0x01;	// 0x01
+        Y = PINA & 0x02;	// 0x02
+        H = PINA & 0x04;	// 0x04
         I = PINA & 0x80;
         
         switch (LOCK_STATE) {
@@ -52,6 +52,9 @@ int main(void) {
                 if ((!X && !H) && Y) {
                     LOCK_STATE = UNLOCKED;
                 }
+		else if ((!X && !H) && !Y) {
+		    LOCK_STATE = HRELEASE;
+		}
                 else {
                     LOCK_STATE = LOCKED;
                 }
