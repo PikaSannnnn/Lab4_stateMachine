@@ -39,11 +39,12 @@ int main(void) {
             case LOCKED:
                 if (input == code[i]) {
                     i++;
-                    LOCK_STATE = PRESS;
                     if (i == 4) {
                         LOCK_STATE = UNLOCKED;
                         i = 0x00;
-			            tmpB = 0x01;
+                    }
+                    else {
+                        LOCK_STATE = PRESS;
                     }
                 }
                 else {
@@ -68,12 +69,13 @@ int main(void) {
                 }
                 else if (input == code[i]) {
                     i++;
-                    LOCK_STATE = LPRESS;
                     if (i == 4) {
                         LOCK_STATE = LOCKED;
                         i = 0x00;
-                 	    tmpB = 0x00;
 		            }
+                    else {
+                        LOCK_STATE = LPRESS;
+                    }
                 }
                 else {
                     i = 0x00;
@@ -102,7 +104,6 @@ int main(void) {
                 tmpC = LOCKED;
                 break;
             case PRESS:
-                tmpB = 0x00;
                 tmpC = PRESS;
                 break;
             case UNLOCKED:
@@ -110,7 +111,6 @@ int main(void) {
                 tmpC = UNLOCKED;
                 break;
             case LPRESS:
-                tmpB = 0x01;
                 tmpC = LPRESS;
                 break;
         }
