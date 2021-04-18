@@ -68,20 +68,20 @@ int main(void) {
 
         switch (LOCK_STATE) {
             case LOCKED:
-                tmpB = LOCKED;
-                tmpC = 0x00;
+                tmpB = 0x00;
+                tmpC = LOCKED;
                 break;
             case HPRESS:
-                tmpB = HPRESS;
-                tmpC = 0x00;
+                tmpB = 0x00;
+                tmpC = HPRESS;
                 break;
             case HRELEASE:
-                tmpB = HRELEASE;
-                tmpC = 0x00;
+                tmpB = 0x00;
+                tmpC = HRELEASE;
                 break;
             case UNLOCKED:
-                tmpB = UNLOCKED;
-                tmpC = 0x01;
+                tmpB = 0x01;
+                tmpC = UNLOCKED;
                 break;
         }
 
