@@ -17,10 +17,10 @@ int main(void) {
 	DDRB = 0xFF; PORTB = 0x00;
 	DDRC = 0xFF; PORTC = 0x00;
 
-    unsigned char X = 0x00;
-    unsigned char Y = 0x00;
-    unsigned char H = 0x00; // #
-    unsigned char I = 0x00; // inside
+    //unsigned char X = 0x00;
+    //unsigned char Y = 0x00;
+    //unsigned char H = 0x00; // #
+    //unsigned char I = 0x00; // inside
     unsigned char code[4] = {0x03, 0x01, 0x02, 0x01};   // #XYX
 	unsigned char input = 0x00;
 	unsigned char tmpB = 0x00;
@@ -61,7 +61,7 @@ int main(void) {
                 }
                 break;
             case UNLOCKED:
-                if (I) {
+                if (input == 0x80) {
                     LOCK_STATE = LOCKED;
                 }
                 else if (input == code[i]) {
