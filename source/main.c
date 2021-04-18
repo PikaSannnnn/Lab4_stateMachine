@@ -24,7 +24,7 @@ int main(void) {
 	unsigned char tmpB = 0x00;
 	unsigned char tmpC = 0x00;
 
-    enum LOCK {LOCKED, HPRESS, HRELEASE, UNLOCKED} LOCK_STATE;
+    enum LOCK {LOCKED, HPRESS, HRELEASE, UNLOCKED, HLPRESS, HLRELEASE} LOCK_STATE;
 	while(1) {
         X = PINA & 0x01;	// 0x01
         Y = PINA & 0x02;	// 0x02
@@ -52,9 +52,9 @@ int main(void) {
                 if ((!X && !H) && Y) {
                     LOCK_STATE = UNLOCKED;
                 }
-		else if ((!X && !H) && !Y) {
-		    LOCK_STATE = HRELEASE;
-		}
+		        else if ((!X && !H) && !Y) {
+		            LOCK_STATE = HRELEASE;
+		        }
                 else {
                     LOCK_STATE = LOCKED;
                 }
@@ -62,6 +62,28 @@ int main(void) {
             case UNLOCKED:
                 if (I) {
                     LOCK_STATE = LOCKED;
+                }
+                break;
+            case HLPRESS:
+                if ((!X && !H) && !Y) {
+                    LOCK_STATE = HLRELEASE;
+                }
+                else if ((!X && H) && !Y) {
+                    LOCK_STATE = HLPRESS;
+                }
+                else {
+                    LOCK_STATE = UNLOCKED;
+                }
+                break;
+            case HLRELEASE:
+                if ((!X && !H) && Y) {
+                    LOCK_STATE = LOCKED;
+                }
+		        else if ((!X && !H) && !Y) {
+		            LOCK_STATE = HLRELEASE;
+		        }
+                else {
+                    LOCK_STATE = UNLOCKED;
                 }
                 break;
             default:
@@ -85,6 +107,14 @@ int main(void) {
             case UNLOCKED:
                 tmpB = 0x01;
                 tmpC = UNLOCKED;
+                break;
+            case HLPRESS:
+                tmpB = 0x01;
+                tmpC = HLPRESS;
+                break;
+            case HLRELEASE:
+                tmpB = 0x01;
+                tmpC = HLRELEASE;
                 break;
         }
 
