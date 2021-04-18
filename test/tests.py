@@ -109,5 +109,5 @@ tests = [ {'description': 'PINA: 0x00 => PORTB: 0, PORTC: 0 (LOCKED)',
 # Optionally you can add a set of "watch" variables these need to be global or static and may need
 # to be scoped at the function level (for static variables) if there are naming conflicts. The 
 # variables listed here will display everytime you hit (and stop at) a breakpoint
-watch = ['i', 'input', 'tmpB', 'tmpC', 'LOCK_STATE']
+watch = ['i', 'code[i-1]', 'input', 'tmpB', 'tmpC', 'LOCK_STATE']
 
