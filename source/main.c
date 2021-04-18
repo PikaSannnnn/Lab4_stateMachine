@@ -1,7 +1,7 @@
 /*	Author: sdong027
  *  Partner(s) Name: 
  *	Lab Section:
- *	Assignment: Lab #4 Exercise #1
+ *	Assignment: Lab #4 Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -14,77 +14,78 @@
 
 int main(void) {
   	DDRA = 0x00; PORTA = 0xFF;
+	DDRB = 0xFF; PORTB = 0x00;
 	DDRC = 0xFF; PORTC = 0x00;
-    unsigned char tmpA = 0x00;
+
+    unsigned char X = 0x00;
+    unsigned char Y = 0x00;
+    unsigned char H = 0x00; // #
+    unsigned char I = 0x00; // inside
+	unsigned char tmpB = 0x00;
 	unsigned char tmpC = 0x00;
 
-    enum OUT {RST, WAIT, WAIT_RELEASE, INC, DEC} OUT_STATE;
+    enum LOCK {LOCKED, HPRESS, HRELEASE, UNLOCKED} LOCK_STATE;
 	while(1) {
-        tmpA = PINA & 0x03;
+        X = PINA & 0x01;
+        Y = PINA & 0x02;
+        H = PINA & 0x03;
+        I = PINA & 0x80;
         
-        switch (OUT_STATE) {
-            case RST:
-                if (!tmpA) {
-                    OUT_STATE = WAIT;
+        switch (LOCK_STATE) {
+            case LOCKED:
+                if ((!X && H) && !Y) {
+                    LOCK_STATE = HPRESS;
                 }
                 break;
-            case WAIT:
-                if ((tmpA & 0x01) && !(tmpA & 0x02)) {
-                    OUT_STATE = INC;
+            case HPRESS:
+                if ((!X && !H) && !Y) {
+                    LOCK_STATE = HRELEASE;
                 }
-                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
-                    OUT_STATE = DEC;
+                else if ((!X && H) && !Y) {
+                    LOCK_STATE = HPRESS;
                 }
-                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
-                    OUT_STATE = RST;
-                }
-                break;
-            case WAIT_RELEASE:
-                if (!tmpA) {
-                    OUT_STATE = WAIT;
-                }
-                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
-                    OUT_STATE = RST;
+                else {
+                    LOCK_STATE = LOCKED;
                 }
                 break;
-            case INC:
-                OUT_STATE = WAIT_RELEASE;
+            case HRELEASE:
+                if ((!X && !H) && Y) {
+                    LOCK_STATE = UNLOCKED;
+                }
+                else {
+                    LOCK_STATE = LOCKED;
+                }
                 break;
-            case DEC:
-                OUT_STATE = WAIT_RELEASE;
+            case UNLOCKED:
+                if (I) {
+                    LOCK_STATE = LOCKED;
+                }
                 break;
             default:
-                tmpC = 0x07;
-                OUT_STATE = WAIT_RELEASE;
+                LOCK_STATE = LOCKED;
                 break;
         }
 
-        switch (OUT_STATE) {
-            case RST:
+        switch (LOCK_STATE) {
+            case LOCKED:
+                tmpB = LOCKED;
                 tmpC = 0x00;
                 break;
-            case WAIT:
+            case HPRESS:
+                tmpB = HPRESS;
+                tmpC = 0x00;
                 break;
-            case WAIT_RELEASE:
-                if (!tmpA) {
-                    OUT_STATE = WAIT;
-                }
-                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
-                    OUT_STATE = RST;
-                }
+            case HRELEASE:
+                tmpB = HRELEASE;
+                tmpC = 0x00;
                 break;
-            case INC:
-                if (tmpC < 9) {
-                    tmpC++;
-                }
-                break;
-            case DEC:
-                if (tmpC > 0) {
-                    tmpC--;
-                }
+            case UNLOCKED:
+                tmpB = UNLOCKED;
+                tmpC = 0x01;
                 break;
         }
 
+        PORTB = tmpB;
         PORTC = tmpC;
 	}
 	return 0;
