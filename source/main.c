@@ -28,7 +28,7 @@ int main(void) {
 	while(1) {
         X = PINA & 0x01;
         Y = PINA & 0x02;
-        H = PINA & 0x03;
+        H = PINA & 0x04;
         I = PINA & 0x80;
         
         switch (LOCK_STATE) {
