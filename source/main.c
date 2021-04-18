@@ -38,10 +38,7 @@ int main(void) {
         switch (LOCK_STATE) {
             case LOCKED:
                 if (input == code[i]) {
-                    if (i == 3) {
-                        LOCK_STATE = UNLOCKED;
-                        i = 0x00;
-                    }
+                    i++;
                     LOCK_STATE = PRESS;
                 }
                 else {
@@ -49,11 +46,14 @@ int main(void) {
                 }
                 break;
             case PRESS:
-                if (!input) {
-                    i++;
+                if (i == 3) {
+                    LOCK_STATE = UNLOCKED;
+                    i = 0x00;
+                }
+                else if (!input) {
                     LOCK_STATE = LOCKED;
                 }
-                else if (input == code[i]) {
+                else if (input == code[i - 1]) {
                     LOCK_STATE = PRESS;
                 }
                 else {
@@ -65,10 +65,7 @@ int main(void) {
                     LOCK_STATE = LOCKED;
                 }
                 else if (input == code[i]) {
-                    if (i == 3) {
-                        LOCK_STATE = LOCKED;
-                        i = 0x00;
-                    }
+                    i++;
                     LOCK_STATE = LPRESS;
                 }
                 else {
@@ -76,11 +73,14 @@ int main(void) {
                 }
                 break;
             case LPRESS:
-                if (!input) {
-                    i++;
+                if (i == 3) {
+                    LOCK_STATE = LOCKED;
+                    i = 0x00;
+                }
+                else if (!input) {
                     LOCK_STATE = UNLOCKED;
                 }
-                else if (input == code[i]) {
+                else if (input == code[i - 1]) {
                     LOCK_STATE = LPRESS;
                 }
                 else {
