@@ -49,12 +49,6 @@ int main(void) {
                 if (!tmpA) {
                     OUT_STATE = WAIT;
                 }
-                else if ((tmpA & 0x01) && !(tmpA & 0x02)) {
-                    OUT_STATE = INC;
-                }
-                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
-                    OUT_STATE = DEC;
-                }
                 else if ((tmpA & 0x01) && (tmpA & 0x02)) {
                     OUT_STATE = RST;
                 }
