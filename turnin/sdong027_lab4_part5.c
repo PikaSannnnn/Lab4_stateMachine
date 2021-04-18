@@ -47,6 +47,9 @@ int main(void) {
                         LOCK_STATE = PRESS;
                     }
                 }
+                else if (input == 0x00) {
+                    LOCK_STATE = LOCKED;
+                }
                 else {
                    i = 0x00; 
                 }
@@ -76,6 +79,9 @@ int main(void) {
                     else {
                         LOCK_STATE = LPRESS;
                     }
+                }
+                else if (input == 0x00) {
+                    LOCK_STATE = UNLOCKED;
                 }
                 else {
                     i = 0x00;
