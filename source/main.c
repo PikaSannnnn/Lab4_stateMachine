@@ -46,7 +46,7 @@ int main(void) {
                 }
                 break;
             case PRESS:
-                if (i == 3) {
+                if (i == 4) {
                     LOCK_STATE = UNLOCKED;
                     i = 0x00;
                 }
@@ -74,7 +74,7 @@ int main(void) {
                 }
                 break;
             case LPRESS:
-                if (i == 3) {
+                if (i == 4) {
                     LOCK_STATE = LOCKED;
                     i = 0x00;
                 }
