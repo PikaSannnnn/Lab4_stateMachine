@@ -43,6 +43,7 @@ int main(void) {
                     if (i == 4) {
                         LOCK_STATE = UNLOCKED;
                         i = 0x00;
+			tmpB = 0x01;
                     }
                 }
                 else {
@@ -71,7 +72,8 @@ int main(void) {
                     if (i == 4) {
                         LOCK_STATE = LOCKED;
                         i = 0x00;
-                    }
+                 	tmpB = 0x00;
+		    }
                 }
                 else {
                     i = 0x00;
