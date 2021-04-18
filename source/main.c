@@ -69,7 +69,7 @@ int main(void) {
                 break;
             case INC:
                 if ((tmpA & 0x01) && !(tmpA & 0x02)) {
-                    OUT_STATE = WAIT_RELEASE;
+                    OUT_STATE = WAIT_RELEASE_INC;
                 }
                 else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
                     OUT_STATE = DEC;
@@ -83,7 +83,7 @@ int main(void) {
                     OUT_STATE = INC;
                 }
                 else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
-                    OUT_STATE = WAIT_RELEASE;
+                    OUT_STATE = WAIT_RELEASE_DEC;
                 }
                 else if ((tmpA & 0x01) && (tmpA & 0x02)) {
                     OUT_STATE = RST;
@@ -91,7 +91,7 @@ int main(void) {
                 break;
             default:
                 tmpC = 0x07;
-                OUT_STATE = WAIT_RELEASE;
+                OUT_STATE = WAIT;
                 break;
         }
 
@@ -101,7 +101,9 @@ int main(void) {
                 break;
             case WAIT:
                 break;
-            case WAIT_RELEASE:
+            case WAIT_RELEASE_INC:
+                break;
+            case WAIT_RELEASE_DEC:
                 break;
             case INC:
                 if (tmpC < 9) {
