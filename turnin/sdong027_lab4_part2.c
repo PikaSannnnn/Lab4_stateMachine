@@ -27,6 +27,12 @@ int main(void) {
                 if (!tmpA) {
                     OUT_STATE = WAIT;
                 }
+                else if ((tmpA & 0x01) && !(tmpA & 0x02)) {
+                    OUT_STATE = INC;
+                }
+                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
+                    OUT_STATE = DEC;
+                }
                 break;
             case WAIT:
                 if ((tmpA & 0x01) && !(tmpA & 0x02)) {
@@ -43,15 +49,37 @@ int main(void) {
                 if (!tmpA) {
                     OUT_STATE = WAIT;
                 }
+                else if ((tmpA & 0x01) && !(tmpA & 0x02)) {
+                    OUT_STATE = INC;
+                }
+                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
+                    OUT_STATE = DEC;
+                }
                 else if ((tmpA & 0x01) && (tmpA & 0x02)) {
                     OUT_STATE = RST;
                 }
                 break;
             case INC:
-                OUT_STATE = WAIT_RELEASE;
+                if ((tmpA & 0x01) && !(tmpA & 0x02)) {
+                    OUT_STATE = WAIT_RELEASE;
+                }
+                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
+                    OUT_STATE = DEC;
+                }
+                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
+                    OUT_STATE = RST;
+                }
                 break;
             case DEC:
-                OUT_STATE = WAIT_RELEASE;
+                if ((tmpA & 0x01) && !(tmpA & 0x02)) {
+                    OUT_STATE = INC;
+                }
+                else if ((tmpA & 0x02) && !(tmpA & 0x01)) {
+                    OUT_STATE = WAIT_RELEASE;
+                }
+                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
+                    OUT_STATE = RST;
+                }
                 break;
             default:
                 tmpC = 0x07;
@@ -66,12 +94,6 @@ int main(void) {
             case WAIT:
                 break;
             case WAIT_RELEASE:
-                if (!tmpA) {
-                    OUT_STATE = WAIT;
-                }
-                else if ((tmpA & 0x01) && (tmpA & 0x02)) {
-                    OUT_STATE = RST;
-                }
                 break;
             case INC:
                 if (tmpC < 9) {
