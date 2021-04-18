@@ -21,40 +21,41 @@ int main(void) {
     unsigned char Y = 0x00;
     unsigned char H = 0x00; // #
     unsigned char I = 0x00; // inside
+    unsigned char code[4] = {0x03, 0x01, 0x02, 0x01};   // #XYX
+	unsigned char input = 0x00;
 	unsigned char tmpB = 0x00;
 	unsigned char tmpC = 0x00;
+    unsigned char i = 0x00;
 
-    enum LOCK {LOCKED, HPRESS, HRELEASE, UNLOCKED, HLPRESS, HLRELEASE} LOCK_STATE;
+    enum LOCK {LOCKED, PRESS, UNLOCKED, LPRESS} LOCK_STATE;
 	while(1) {
-        X = PINA & 0x01;	// 0x01
-        Y = PINA & 0x02;	// 0x02
-        H = PINA & 0x04;	// 0x04
-        I = PINA & 0x80;
+        input = PINA & 0xFF;
+        // X = PINA & 0x01;	// 0x01
+        // Y = PINA & 0x02;	// 0x02
+        // H = PINA & 0x04;	// 0x04
+        // I = PINA & 0x80;
         
         switch (LOCK_STATE) {
             case LOCKED:
-                if ((!X && H) && !Y) {
-                    LOCK_STATE = HPRESS;
-                }
-                break;
-            case HPRESS:
-                if ((!X && !H) && !Y) {
-                    LOCK_STATE = HRELEASE;
-                }
-                else if ((!X && H) && !Y) {
-                    LOCK_STATE = HPRESS;
+                if (input == code[i]) {
+                    LOCK_STATE = PRESS;
                 }
                 else {
-                    LOCK_STATE = LOCKED;
+                    i = 0x00;
                 }
                 break;
-            case HRELEASE:
-                if ((!X && !H) && Y) {
+            case PRESS:
+                if (i == 3) {
                     LOCK_STATE = UNLOCKED;
+                    i = 0x00;
                 }
-		        else if ((!X && !H) && !Y) {
-		            LOCK_STATE = HRELEASE;
-		        }
+                else if (!input) {
+                    i++;
+                    LOCK_STATE = LOCKED;
+                }
+                else if (input == code[i]) {
+                    LOCK_STATE = PRESS;
+                }
                 else {
                     LOCK_STATE = LOCKED;
                 }
@@ -63,28 +64,25 @@ int main(void) {
                 if (I) {
                     LOCK_STATE = LOCKED;
                 }
-                else if ((!X && H) && !Y) {
-                    LOCK_STATE = HLPRESS;
-                }
-                break;
-            case HLPRESS:
-                if ((!X && !H) && !Y) {
-                    LOCK_STATE = HLRELEASE;
-                }
-                else if ((!X && H) && !Y) {
-                    LOCK_STATE = HLPRESS;
+                else if (input == code[i]) {
+                    LOCK_STATE = LPRESS;
                 }
                 else {
-                    LOCK_STATE = UNLOCKED;
+                    i = 0x00;
                 }
                 break;
-            case HLRELEASE:
-                if ((!X && !H) && Y) {
+            case LPRESS:
+                if (i == 3) {
                     LOCK_STATE = LOCKED;
+                    i = 0x00;
                 }
-		        else if ((!X && !H) && !Y) {
-		            LOCK_STATE = HLRELEASE;
-		        }
+                else if (!input) {
+                    i++;
+                    LOCK_STATE = UNLOCKED;
+                }
+                else if (input == code[i]) {
+                    LOCK_STATE = LPRESS;
+                }
                 else {
                     LOCK_STATE = UNLOCKED;
                 }
@@ -99,25 +97,17 @@ int main(void) {
                 tmpB = 0x00;
                 tmpC = LOCKED;
                 break;
-            case HPRESS:
+            case PRESS:
                 tmpB = 0x00;
-                tmpC = HPRESS;
-                break;
-            case HRELEASE:
-                tmpB = 0x00;
-                tmpC = HRELEASE;
+                tmpC = PRESS;
                 break;
             case UNLOCKED:
                 tmpB = 0x01;
                 tmpC = UNLOCKED;
                 break;
-            case HLPRESS:
+            case LPRESS:
                 tmpB = 0x01;
-                tmpC = HLPRESS;
-                break;
-            case HLRELEASE:
-                tmpB = 0x01;
-                tmpC = HLRELEASE;
+                tmpC = LPRESS;
                 break;
         }
 
